@@ -3,7 +3,8 @@ const path = require('path'),
   MiniCssExtractPlugin = require('mini-css-extract-plugin'),
   TerserWebpackPlugin = require('terser-webpack-plugin'),
   OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin"),
-  webpack = require('webpack');
+  webpack = require('webpack'),
+  FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 const buildPath = path.join(__dirname, 'docs');
 const sourcePath = path.join(__dirname, 'src');
@@ -42,6 +43,13 @@ module.exports = (env, argv) => {
             'sass-loader',
           ],
         },
+        {
+          test: /\.(png|site\.webmanifest|svg|icon|xml)$/i,
+          loader: "file-loader",
+          options: {
+            name: '[path][name].[ext]',
+          }
+        },
       ]
     },
     devServer: {
@@ -61,6 +69,7 @@ module.exports = (env, argv) => {
       minimizer: isProduction? [] : [new TerserWebpackPlugin(), new OptimizeCssAssetsWebpackPlugin()],
     },
     plugins: [
+      new FaviconsWebpackPlugin(path.join(__dirname, 'src', 'icon', 'app-icon.png')),
       new webpack.DefinePlugin({
         'process.env': {
           TOKEN_HEADER_NAME: JSON.stringify(process.env.TOKEN_HEADER_NAME || '')
@@ -70,6 +79,7 @@ module.exports = (env, argv) => {
         template: path.join(sourcePath, 'index.html'),
         path: buildPath,
         filename: 'index.html',
+        inject: "head"
       }),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css'
