@@ -34,7 +34,7 @@ jobs:
         with:
           registry: docker.pkg.github.com
           name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-nginx
-          username: ${{ secrets.REGISTRY_USERNAME }}
+          username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
           dockerfile: docker_nginx.Dockerfile
           buildargs: ENV
@@ -45,7 +45,7 @@ jobs:
         with:
           registry: docker.pkg.github.com
           name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-php
-          username: ${{ secrets.REGISTRY_USERNAME }}
+          username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
           dockerfile: docker_php.Dockerfile
           buildargs: COMPOSER_ALLOW_SUPERUSER
@@ -56,7 +56,7 @@ jobs:
         with:
           registry: docker.pkg.github.com
           name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-migrations
-          username: ${{ secrets.REGISTRY_USERNAME }}
+          username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
           dockerfile: docker_migrations.Dockerfile
           buildargs: COMPOSER_ALLOW_SUPERUSER
