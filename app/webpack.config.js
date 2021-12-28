@@ -2,7 +2,8 @@ const path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   MiniCssExtractPlugin = require('mini-css-extract-plugin'),
   TerserWebpackPlugin = require('terser-webpack-plugin'),
-  OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin");
+  OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin"),
+  webpack = require('webpack');
 
 const buildPath = path.join(__dirname, 'docs');
 const sourcePath = path.join(__dirname, 'src');
@@ -60,6 +61,11 @@ module.exports = (env, argv) => {
       minimizer: isProduction? [] : [new TerserWebpackPlugin(), new OptimizeCssAssetsWebpackPlugin()],
     },
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          TOKEN_HEADER_NAME: JSON.stringify(process.env.TOKEN_HEADER_NAME || '')
+        }
+      }),
       new HtmlWebpackPlugin({
         template: path.join(sourcePath, 'index.html'),
         path: buildPath,
