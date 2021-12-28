@@ -40949,7 +40949,18 @@ var calculateChallengeData = function calculateChallengeData(workouts) {
 
 
 
-TimeAgo.addDefaultLocale(en_namespaceObject);
+TimeAgo.addDefaultLocale(en_namespaceObject); // This is pretty stupid, but here goes. Using `now={}` or `timeOffset={}` combined with a future Date in ReactTimeAgo
+// causes an endless loop that completely crashes the application. To work around this problem, I match up the hours
+// of the target Date with the current time. This should be the same as using the now or timeOffset attributes to offset
+// the calculations.
+
+var getDateAtMidnight = function getDateAtMidnight(date) {
+  var currentDate = new Date();
+  var midnightDate = new Date(date);
+  midnightDate.setHours(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+  return midnightDate.getTime();
+};
+
 var InfoContainer = function InfoContainer() {
   var _useAppSelector = useAppSelector(function (state) {
     return state.workouts;
@@ -40971,16 +40982,12 @@ var InfoContainer = function InfoContainer() {
   var data = calculateChallengeData(workouts);
 
   if (!data.hasStarted && !data.hasFinished) {
-    // Stupid
-    var nowDate = new Date();
-    nowDate.setHours(0, 0, 0);
     return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredBox, null, /*#__PURE__*/react.createElement(Typography_Typography, {
       id: "modal-modal-title",
       variant: "h6",
       component: "h2"
     }, /*#__PURE__*/react.createElement(react.Fragment, null, "Challenge starts", " ", /*#__PURE__*/react.createElement(modules_ReactTimeAgo, {
-      date: data.dateStart,
-      now: nowDate.getTime()
+      date: getDateAtMidnight(data.dateStart)
     }), "!"))));
   }
 
