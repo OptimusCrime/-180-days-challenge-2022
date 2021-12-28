@@ -36533,13 +36533,13 @@ const CircularProgress = /*#__PURE__*/react.forwardRef(function CircularProgress
 
 var CenteredBox = function CenteredBox(_ref) {
   var children = _ref.children,
-      height = _ref.height;
+      minHeight = _ref.minHeight;
   return /*#__PURE__*/react.createElement(Box_Box, {
     sx: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: height || 'calc(100vh - 3rem)',
+      minHeight: minHeight || 'calc(100vh - 3rem)',
       flexFlow: 'column'
     }
   }, children);
@@ -36564,11 +36564,9 @@ var ContainerWrapper = function ContainerWrapper(_ref) {
 };
 ;// CONCATENATED MODULE: ./config.ts
 // Format YYYY-MM-DD
-var CHALLENGE_DATE_START = "2021-12-01";
-var CHALLENGE_DATE_END = "2021-12-31"; //export const CHALLENGE_DATE_START = "2022-01-01";
-//export const CHALLENGE_DATE_END = "2022-06-30";
-
-var TARGET_WORKOUTS = 31;
+var CHALLENGE_DATE_START = "2022-01-01";
+var CHALLENGE_DATE_END = "2022-06-30";
+var TARGET_WORKOUTS = 90;
 var DONATION_EACH = 500;
 ;// CONCATENATED MODULE: ./utilities.ts
 
@@ -40975,7 +40973,7 @@ var InfoContainer = function InfoContainer() {
   }
 
   return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredBox, {
-    height: "calc(50vh - 3rem)"
+    minHeight: "calc(50vh - 3rem)"
   }, data.onSchedule ? /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(Typography_Typography, {
     variant: "h6",
     component: "h2",
