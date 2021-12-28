@@ -41,6 +41,10 @@ export const InfoContainer = () => {
   const data = calculateChallengeData(workouts);
 
   if (!data.hasStarted && !data.hasFinished) {
+    // Stupid
+    const nowDate = new Date();
+    nowDate.setHours(0, 0, 0);
+
     return (
       <ContainerWrapper>
         <CenteredBox>
@@ -48,7 +52,7 @@ export const InfoContainer = () => {
             <>
               Challenge starts
               {" "}
-              <ReactTimeAgo date={data.dateStart} />
+              <ReactTimeAgo date={data.dateStart} now={nowDate.getTime()} />
               !
             </>
           </Typography>
