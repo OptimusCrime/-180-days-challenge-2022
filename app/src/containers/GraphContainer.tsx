@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, Box} from "@mui/material";
 import * as Highcharts from 'highcharts';
-import {addDays} from "date-fns";
+import {addDays, addHours, format} from "date-fns";
 import differenceInDays from 'date-fns/differenceInDays';
 import HighchartsReact from "highcharts-react-official";
 
@@ -13,36 +13,47 @@ import {Entry} from "../types";
 import {calculateTotalDays, parseDate} from "../utilities";
 
 // Some rehashed code from the original challenge. I have no idea what is going on here...
+const createXAxisValues = (params: {
+  startDate: Date,
+  numberOfDays: number
+}): number[] => {
+  const { startDate, numberOfDays } = params;
+
+   return new Array(numberOfDays)
+    .fill(0)
+    .map((_, index) => addHours(addDays(startDate, index), 3).getTime());
+};
+
 const parseProgressDataSet = (params: {
   workouts: Entry[],
   startDate: Date,
-  numberOfDays: number
+  xAxisValues: number[]
 }): number[][] => {
-  const { workouts, startDate, numberOfDays } = params;
+  const { workouts, startDate, xAxisValues } = params;
   const entriesDays = workouts.map(entry => differenceInDays(entry.added, startDate)).reverse();
 
-  return new Array(numberOfDays)
+  return new Array(xAxisValues.length)
     .fill(0)
     .map((_, index) => {
       return [
-        addDays(startDate, index).getTime(),
+        xAxisValues[index],
         entriesDays.filter(entry => entry <= index).length
       ]
     });
 }
 
 const parseGrowthDataSet = (params: {
-  startDate: Date,
   numberOfDays: number,
-  targetWorkouts: number
+  targetWorkouts: number,
+  xAxisValues: number[],
 }): number[][] => {
-  const { startDate, numberOfDays, targetWorkouts } = params;
+  const { numberOfDays, targetWorkouts, xAxisValues } = params;
 
-  return new Array(numberOfDays)
+  return new Array(xAxisValues.length)
     .fill(0)
     .map((_, index) => {
       return [
-        addDays(startDate, index).getTime(),
+        xAxisValues[index],
         Math.ceil((targetWorkouts / numberOfDays) * index)
       ];
     });
@@ -110,24 +121,26 @@ export const GraphContainer = () => {
     endDate: CHALLENGE_DATE_END
   });
 
+  const xAxisValues = createXAxisValues({
+    startDate: parsedDateStart,
+    numberOfDays,
+  })
+
   const progressDataSet = parseProgressDataSet({
     workouts: workouts,
     startDate: parsedDateStart,
-    numberOfDays
+    xAxisValues,
   });
 
   const growthDataSet = parseGrowthDataSet({
-    startDate: parsedDateStart,
     numberOfDays,
-    targetWorkouts: TARGET_WORKOUTS
+    targetWorkouts: TARGET_WORKOUTS,
+    xAxisValues,
   });
 
   const config = {
     chart: {
       type: 'area',
-    },
-    time: {
-      timezoneOffset: -60,
     },
     title: {
       text: ""
@@ -150,6 +163,32 @@ export const GraphContainer = () => {
         }
       }
     },
+    tooltip: {
+      formatter: function () {
+        let output = '';
+
+        let target = 0;
+        let progress = 0;
+
+        // @ts-ignore
+        this.points.forEach(point => {
+          output += `<br/>${point.series.name}: ${point.y}`;
+
+          if (point.series.name === "Target") {
+            target = point.y;
+          }
+          if (point.series.name === "Progress") {
+            progress = point.y;
+          }
+        });
+
+        const difference = `<br /><br />${target > progress ? 'Behind' : 'Ahead'}: ${Math.abs(target-progress)}`;
+
+        // @ts-ignore
+        return `<b>${format(this.x, 'MMM d')}</b><br />${output}${difference}`;
+      },
+      shared: true
+    },
     yAxis: {
       title: {
         text: ""
@@ -162,11 +201,13 @@ export const GraphContainer = () => {
       },
     },
     series: [{
+      name: "Progress",
       showInLegend: false,
       type: 'line',
       color: '#555',
       data: progressDataSet,
     }, {
+      name: "Target",
       showInLegend: false,
       type: 'line',
       color: '#55e',
