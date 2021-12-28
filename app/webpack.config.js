@@ -69,7 +69,14 @@ module.exports = (env, argv) => {
       minimizer: isProduction? [] : [new TerserWebpackPlugin(), new OptimizeCssAssetsWebpackPlugin()],
     },
     plugins: [
-      new FaviconsWebpackPlugin(path.join(__dirname, 'src', 'icon', 'app-icon.png')),
+      new FaviconsWebpackPlugin({
+        logo: path.join(__dirname, 'src', 'icon', 'app-icon.png'),
+        favicons: {
+          appName: "180-days-challenge-2022",
+          start_url: ".",
+          appDescription: "180 Days Challenge 2022",
+        }
+      }),
       new webpack.DefinePlugin({
         'process.env': {
           TOKEN_HEADER_NAME: JSON.stringify(process.env.TOKEN_HEADER_NAME || '')
