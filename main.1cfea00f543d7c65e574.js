@@ -36564,7 +36564,9 @@ var ContainerWrapper = function ContainerWrapper(_ref) {
 };
 ;// CONCATENATED MODULE: ./config.ts
 // Format YYYY-MM-DD
-var CHALLENGE_DATE_START = "2022-01-01";
+//export const CHALLENGE_DATE_START = "2022-01-01";
+//export const CHALLENGE_DATE_END = "2022-06-30";
+var CHALLENGE_DATE_START = "2021-12-01";
 var CHALLENGE_DATE_END = "2022-06-30";
 var TARGET_WORKOUTS = 90;
 var DONATION_EACH = 500;
@@ -36595,26 +36597,34 @@ var calculateTotalDays = function calculateTotalDays(params) {
 
  // Some rehashed code from the original challenge. I have no idea what is going on here...
 
+var createXAxisValues = function createXAxisValues(params) {
+  var startDate = params.startDate,
+      numberOfDays = params.numberOfDays;
+  return new Array(numberOfDays).fill(0).map(function (_, index) {
+    return addHours(addDays(startDate, index), 3).getTime();
+  });
+};
+
 var parseProgressDataSet = function parseProgressDataSet(params) {
   var workouts = params.workouts,
       startDate = params.startDate,
-      numberOfDays = params.numberOfDays;
+      xAxisValues = params.xAxisValues;
   var entriesDays = workouts.map(function (entry) {
     return differenceInDays(entry.added, startDate);
   }).reverse();
-  return new Array(numberOfDays).fill(0).map(function (_, index) {
-    return [addDays(startDate, index).getTime(), entriesDays.filter(function (entry) {
+  return new Array(xAxisValues.length).fill(0).map(function (_, index) {
+    return [xAxisValues[index], entriesDays.filter(function (entry) {
       return entry <= index;
     }).length];
   });
 };
 
 var parseGrowthDataSet = function parseGrowthDataSet(params) {
-  var startDate = params.startDate,
-      numberOfDays = params.numberOfDays,
-      targetWorkouts = params.targetWorkouts;
-  return new Array(numberOfDays).fill(0).map(function (_, index) {
-    return [addDays(startDate, index).getTime(), Math.ceil(targetWorkouts / numberOfDays * index)];
+  var numberOfDays = params.numberOfDays,
+      targetWorkouts = params.targetWorkouts,
+      xAxisValues = params.xAxisValues;
+  return new Array(xAxisValues.length).fill(0).map(function (_, index) {
+    return [xAxisValues[index], Math.ceil(targetWorkouts / numberOfDays * index)];
   });
 };
 
@@ -36657,22 +36667,23 @@ var GraphContainer = function GraphContainer() {
     startDate: CHALLENGE_DATE_START,
     endDate: CHALLENGE_DATE_END
   });
-  var progressDataSet = parseProgressDataSet({
-    workouts: workouts,
+  var xAxisValues = createXAxisValues({
     startDate: parsedDateStart,
     numberOfDays: numberOfDays
   });
-  var growthDataSet = parseGrowthDataSet({
+  var progressDataSet = parseProgressDataSet({
+    workouts: workouts,
     startDate: parsedDateStart,
+    xAxisValues: xAxisValues
+  });
+  var growthDataSet = parseGrowthDataSet({
     numberOfDays: numberOfDays,
-    targetWorkouts: TARGET_WORKOUTS
+    targetWorkouts: TARGET_WORKOUTS,
+    xAxisValues: xAxisValues
   });
   var config = {
     chart: {
       type: 'area'
-    },
-    time: {
-      timezoneOffset: -60
     },
     title: {
       text: ""
@@ -36695,6 +36706,29 @@ var GraphContainer = function GraphContainer() {
         }
       }
     },
+    tooltip: {
+      formatter: function formatter() {
+        var output = '';
+        var target = 0;
+        var progress = 0; // @ts-ignore
+
+        this.points.forEach(function (point) {
+          output += "<br/>".concat(point.series.name, ": ").concat(point.y);
+
+          if (point.series.name === "Target") {
+            target = point.y;
+          }
+
+          if (point.series.name === "Progress") {
+            progress = point.y;
+          }
+        });
+        var difference = "<br /><br />".concat(target > progress ? 'Behind' : 'Ahead', ": ").concat(Math.abs(target - progress)); // @ts-ignore
+
+        return "<b>".concat(format(this.x, 'MMM d'), "</b><br />").concat(output).concat(difference);
+      },
+      shared: true
+    },
     yAxis: {
       title: {
         text: ""
@@ -36707,11 +36741,13 @@ var GraphContainer = function GraphContainer() {
       }
     },
     series: [{
+      name: "Progress",
       showInLegend: false,
       type: 'line',
       color: '#555',
       data: progressDataSet
     }, {
+      name: "Target",
       showInLegend: false,
       type: 'line',
       color: '#55e',
