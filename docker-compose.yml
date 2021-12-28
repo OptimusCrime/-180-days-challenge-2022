@@ -1,0 +1,61 @@
+version: '2'
+
+services:
+
+  ###############################################
+  #                  Webserver                  #
+  ###############################################
+
+  challenge180days2022-php:
+    build:
+      context: .
+      dockerfile: docker_php.Dockerfile
+    container_name: "challenge180days2022_php_dev"
+    ports:
+      - "9000"
+    env_file:
+      - env_php_dev.env
+    volumes:
+      - ./backend/src:/code/src
+      - ./backend/entrypoint:/code/entrypoint
+      - ./backend/vendor:/code/vendor
+      - ./backend/database:/code/database
+
+  ###############################################
+  #                    Nginx                    #
+  ###############################################
+
+  challenge180days2022-nginx:
+    build:
+      context: .
+      dockerfile: docker_nginx.Dockerfile
+      args:
+        - ENV=dev
+    container_name: "challenge180days2022_nginx_dev"
+    ports:
+      - "8098:80"
+    volumes:
+      - ./backend/_docker/site.conf:/etc/nginx/conf.d/site.conf
+    depends_on:
+      - challenge180days2022-php
+    links:
+      - challenge180days2022-php
+
+  ###############################################
+  #                 Migrations                  #
+  ###############################################
+
+  challenge180days2022-migrations:
+    build:
+      context: .
+      dockerfile: docker_migrations.Dockerfile
+    container_name: "challenge180days2022_migrations_dev"
+    environment:
+      WAIT_HOSTS: challenge180days2022-db:3306
+    env_file:
+      - env_php_dev.env
+    volumes:
+      - ./backend/src:/code/src
+      - ./backend/phinx:/code/phinx
+      - ./backend/vendor:/code/vendor
+      - ./backend/database:/code/database

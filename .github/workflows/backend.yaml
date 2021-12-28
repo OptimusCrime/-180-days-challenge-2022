@@ -1,0 +1,63 @@
+name: 180-days-challenge-2022-backend
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get release version
+        id: get_version
+        run: echo "name=RELEASE_VERSION::$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_ENV
+
+      - name: Setup PHP with specific version of PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
+
+      - name: Install site backend dependencies
+        run: |
+          cd backend
+          composer install
+
+      - name: Build and publish nginx to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        env:
+          ENV: prod
+        with:
+          registry: docker.pkg.github.com
+          name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-nginx
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          dockerfile: docker_nginx.Dockerfile
+          buildargs: ENV
+          tags: "latest,${{ env.RELEASE_VERSION }}"
+
+      - name: Build and publish php to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          registry: docker.pkg.github.com
+          name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-php
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          dockerfile: docker_php.Dockerfile
+          buildargs: COMPOSER_ALLOW_SUPERUSER
+          tags: "latest,${{ env.RELEASE_VERSION }}"
+
+      - name: Build and publish migrations to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          registry: docker.pkg.github.com
+          name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-migrations
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          dockerfile: docker_migrations.Dockerfile
+          buildargs: COMPOSER_ALLOW_SUPERUSER
+          tags: "latest,${{ env.RELEASE_VERSION }}"
