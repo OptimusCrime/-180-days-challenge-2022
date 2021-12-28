@@ -107,7 +107,7 @@ export const InfoContainer = () => {
 
   return (
     <ContainerWrapper>
-      <CenteredBox height="calc(50vh - 3rem)">
+      <CenteredBox minHeight="calc(50vh - 3rem)">
         {data.onSchedule ? (
           <>
             <Typography

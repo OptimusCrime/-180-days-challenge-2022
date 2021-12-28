@@ -23,3 +23,8 @@ For every work out session short of the goal, I will donate 500,- NOK to [Redd B
 80 of 90 sessions recorded = (90 - 80) * 500 = 5000,- NOK
 90 of 90 sessions recorded = (90 - 90) * 500 = 0,- NOK
 ```
+
+## Disclaimer
+
+This project was made over the course of a couple of days, with minimal effort put into the quality of the code. The project
+reuses a lot of code from earlier projects.
