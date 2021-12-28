@@ -1,12 +1,12 @@
 {
-  "name": "180-days-challenge-app",
-  "short_name": "180-days-challenge-app",
-  "description": "",
+  "name": "180-days-challenge-2022",
+  "short_name": "180-days-challenge-2022",
+  "description": "180 Days Challenge 2022",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
   "orientation": "any",
-  "start_url": "/?homescreen=1",
+  "start_url": ".",
   "background_color": "#fff",
   "theme_color": "#fff",
   "icons": [
