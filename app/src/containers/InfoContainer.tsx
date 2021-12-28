@@ -2,7 +2,8 @@ import React from 'react';
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import {Alert, Box, CircularProgress, Container, Divider, Typography} from "@mui/material";
+import {Alert, Box, Divider, Typography} from "@mui/material";
+import {format} from "date-fns";
 
 import {useAppSelector} from "../store/hooks";
 import {calculateChallengeData} from "../calculateProgression";
@@ -11,9 +12,19 @@ import {CenteredBox} from "../components/CenteredBox";
 import {TARGET_WORKOUTS} from "../config";
 import {formatNumber} from "../utilities";
 import {ContainerWrapper} from "../components/ContainerWrapper";
-import {format} from "date-fns";
 
 TimeAgo.addDefaultLocale(en);
+
+// This is pretty stupid, but here goes. Using `now={}` or `timeOffset={}` combined with a future Date in ReactTimeAgo
+// causes an endless loop that completely crashes the application. To work around this problem, I match up the hours
+// of the target Date with the current time. This should be the same as using the now or timeOffset attributes to offset
+// the calculations.
+const getDateAtMidnight = (date: Date) => {
+  const currentDate = new Date();
+  const midnightDate = new Date(date);
+  midnightDate.setHours(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+  return midnightDate.getTime();
+}
 
 export const InfoContainer = () => {
   const { loading, error, workouts } = useAppSelector(state => state.workouts);
@@ -41,10 +52,6 @@ export const InfoContainer = () => {
   const data = calculateChallengeData(workouts);
 
   if (!data.hasStarted && !data.hasFinished) {
-    // Stupid
-    const nowDate = new Date();
-    nowDate.setHours(0, 0, 0);
-
     return (
       <ContainerWrapper>
         <CenteredBox>
@@ -52,7 +59,9 @@ export const InfoContainer = () => {
             <>
               Challenge starts
               {" "}
-              <ReactTimeAgo date={data.dateStart} now={nowDate.getTime()} />
+              <ReactTimeAgo
+                date={getDateAtMidnight(data.dateStart)}
+              />
               !
             </>
           </Typography>
