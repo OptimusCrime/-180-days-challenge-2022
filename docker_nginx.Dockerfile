@@ -1,5 +1,7 @@
 FROM nginx:1.19.3-alpine
 
+ARG ENV=prod
+
 COPY backend/_docker/site.conf /etc/nginx/conf.d/site.conf
 
 RUN chmod 644 /etc/nginx/conf.d/site.conf \
