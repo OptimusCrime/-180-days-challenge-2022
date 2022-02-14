@@ -6148,7 +6148,7 @@ function useId(idOverride) {
 
 /***/ }),
 
-/***/ 42177:
+/***/ 13737:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10397,6 +10397,7 @@ var Page;
 (function (Page) {
   Page[Page["INFO"] = 0] = "INFO";
   Page[Page["GRAPH"] = 1] = "GRAPH";
+  Page[Page["DONATIONS"] = 2] = "DONATIONS";
 })(Page || (Page = {}));
 
 var initialState = {
@@ -16284,6 +16285,13 @@ var MenuContainer = function MenuContainer() {
   }, "Graph")), /*#__PURE__*/react.createElement(MenuItem_MenuItem, {
     onClick: function onClick() {
       handleCloseNavMenu();
+      dispatch(setPage(Page.DONATIONS));
+    }
+  }, /*#__PURE__*/react.createElement(Typography_Typography, {
+    textAlign: "center"
+  }, "Donations")), /*#__PURE__*/react.createElement(MenuItem_MenuItem, {
+    onClick: function onClick() {
+      handleCloseNavMenu();
       getEntries(dispatch);
     }
   }, /*#__PURE__*/react.createElement(Typography_Typography, {
@@ -16349,7 +16357,17 @@ var MenuContainer = function MenuContainer() {
       color: 'white',
       display: 'block'
     }
-  }, "Graph")), /*#__PURE__*/react.createElement(Button_Button, {
+  }, "Graph"), /*#__PURE__*/react.createElement(Button_Button, {
+    onClick: function onClick() {
+      handleCloseNavMenu();
+      dispatch(setPage(Page.DONATIONS));
+    },
+    sx: {
+      my: 2,
+      color: 'white',
+      display: 'block'
+    }
+  }, "Donations")), /*#__PURE__*/react.createElement(Button_Button, {
     sx: {
       my: 2,
       color: 'white',
@@ -36582,7 +36600,96 @@ var calculateTotalDays = function calculateTotalDays(params) {
       endDate = params.endDate;
   return differenceInDays(utilities_parseDate(endDate), utilities_parseDate(startDate)) + 1; // Add one, inclusive count
 };
+;// CONCATENATED MODULE: ./calculateProgression.ts
+function calculateProgression_slicedToArray(arr, i) { return calculateProgression_arrayWithHoles(arr) || calculateProgression_iterableToArrayLimit(arr, i) || calculateProgression_unsupportedIterableToArray(arr, i) || calculateProgression_nonIterableRest(); }
+
+function calculateProgression_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function calculateProgression_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return calculateProgression_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return calculateProgression_arrayLikeToArray(o, minLen); }
+
+function calculateProgression_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function calculateProgression_iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function calculateProgression_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+// Using ceil instead of floor, we make the calculation inclusive
+var dateToDays = function dateToDays(endDate, startDate) {
+  return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+};
+
+var mapStringToDate = function mapStringToDate(params) {
+  var date = params.date,
+      hours = params.hours,
+      minutes = params.minutes,
+      seconds = params.seconds;
+
+  var _date$split$map = date.split('-').map(Number),
+      _date$split$map2 = calculateProgression_slicedToArray(_date$split$map, 3),
+      year = _date$split$map2[0],
+      month = _date$split$map2[1],
+      day = _date$split$map2[2];
+
+  return new Date(year, month - 1, day, hours, minutes, seconds);
+};
+
+var calculateChallengeData = function calculateChallengeData(workouts) {
+  var dateStart = mapStringToDate({
+    date: CHALLENGE_DATE_START,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  var dateEnd = mapStringToDate({
+    date: CHALLENGE_DATE_END,
+    hours: 23,
+    minutes: 59,
+    seconds: 59
+  });
+
+  if (dateStart.getTime() > Date.now()) {
+    // Challenge has yet to start
+    return {
+      hasStarted: false,
+      hasFinished: false,
+      dateStart: dateStart
+    };
+  }
+
+  var numWorkouts = workouts.length;
+
+  if (dateEnd.getTime() < Date.now()) {
+    // Challenge is finished
+    return {
+      hasStarted: true,
+      hasFinished: true,
+      successful: numWorkouts >= TARGET_WORKOUTS,
+      donationsRequired: numWorkouts >= TARGET_WORKOUTS ? 0 : (TARGET_WORKOUTS - numWorkouts) * DONATION_EACH,
+      workouts: numWorkouts
+    };
+  } // Guess I could use some date-fns functions for this...
+
+
+  var challengeDurationInDays = dateToDays(dateEnd, dateStart);
+  var daysInChallenge = dateToDays(new Date(), dateStart);
+  var daysInChallengeRemaining = challengeDurationInDays - daysInChallenge;
+  var targetWorkouts = Math.ceil(TARGET_WORKOUTS / challengeDurationInDays * daysInChallenge);
+  return {
+    hasStarted: true,
+    hasFinished: false,
+    onSchedule: workouts.length >= targetWorkouts,
+    behindOrAhead: Math.abs(targetWorkouts - workouts.length),
+    challengeDurationInDays: challengeDurationInDays,
+    daysInChallenge: daysInChallenge,
+    daysInChallengeRemaining: daysInChallengeRemaining,
+    workouts: numWorkouts,
+    targetWorkouts: targetWorkouts
+  };
+};
 ;// CONCATENATED MODULE: ./containers/GraphContainer.tsx
+
 
 
 
@@ -36679,6 +36786,9 @@ var GraphContainer = function GraphContainer() {
     targetWorkouts: TARGET_WORKOUTS,
     xAxisValues: xAxisValues
   });
+  var data = calculateChallengeData(workouts); // Jikes
+
+  var verticalPlotColor = data.hasStarted && !data.hasFinished ? data.onSchedule ? '#5e5' : '#e55' : '#000';
   var config = {
     chart: {
       type: 'area'
@@ -36725,7 +36835,9 @@ var GraphContainer = function GraphContainer() {
 
         return "<b>".concat(format(this.x, 'MMM d'), "</b><br />").concat(output).concat(difference);
       },
-      shared: true
+      shared: true,
+      followCursor: true,
+      followTouchMove: true
     },
     yAxis: {
       title: {
@@ -36736,6 +36848,17 @@ var GraphContainer = function GraphContainer() {
       type: "datetime",
       labels: {
         format: "{value:%b %e}"
+      },
+      plotLines: [{
+        color: verticalPlotColor,
+        width: 2,
+        value: Date.now(),
+        zIndex: 9999
+      }],
+      crosshair: {
+        enabled: true,
+        zIndex: 99999,
+        width: 2
       }
     },
     series: [{
@@ -36773,10 +36896,14 @@ var GraphContainer = function GraphContainer() {
       })
     }]
   };
-  return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement((highcharts_react_min_default()), {
+  return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement("div", {
+    style: {
+      userSelect: 'none'
+    }
+  }, /*#__PURE__*/react.createElement((highcharts_react_min_default()), {
     highcharts: highcharts,
     options: config
-  }));
+  })));
 };
 ;// CONCATENATED MODULE: ../node_modules/relative-time-format/modules/LocaleDataStore.js
 // Fallback locale.
@@ -40849,92 +40976,6 @@ const Divider = /*#__PURE__*/react.forwardRef(function Divider(inProps, ref) {
 });
  false ? 0 : void 0;
 /* harmony default export */ const Divider_Divider = (Divider);
-;// CONCATENATED MODULE: ./calculateProgression.ts
-function calculateProgression_slicedToArray(arr, i) { return calculateProgression_arrayWithHoles(arr) || calculateProgression_iterableToArrayLimit(arr, i) || calculateProgression_unsupportedIterableToArray(arr, i) || calculateProgression_nonIterableRest(); }
-
-function calculateProgression_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function calculateProgression_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return calculateProgression_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return calculateProgression_arrayLikeToArray(o, minLen); }
-
-function calculateProgression_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function calculateProgression_iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function calculateProgression_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-// Using ceil instead of floor, we make the calculation inclusive
-var dateToDays = function dateToDays(endDate, startDate) {
-  return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-};
-
-var mapStringToDate = function mapStringToDate(params) {
-  var date = params.date,
-      hours = params.hours,
-      minutes = params.minutes,
-      seconds = params.seconds;
-
-  var _date$split$map = date.split('-').map(Number),
-      _date$split$map2 = calculateProgression_slicedToArray(_date$split$map, 3),
-      year = _date$split$map2[0],
-      month = _date$split$map2[1],
-      day = _date$split$map2[2];
-
-  return new Date(year, month - 1, day, hours, minutes, seconds);
-};
-
-var calculateChallengeData = function calculateChallengeData(workouts) {
-  var dateStart = mapStringToDate({
-    date: CHALLENGE_DATE_START,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
-  var dateEnd = mapStringToDate({
-    date: CHALLENGE_DATE_END,
-    hours: 23,
-    minutes: 59,
-    seconds: 59
-  });
-
-  if (dateStart.getTime() > Date.now()) {
-    // Challenge has yet to start
-    return {
-      hasStarted: false,
-      hasFinished: false,
-      dateStart: dateStart
-    };
-  }
-
-  var numWorkouts = workouts.length;
-
-  if (dateEnd.getTime() < Date.now()) {
-    // Challenge is finished
-    return {
-      hasStarted: true,
-      hasFinished: true,
-      successful: numWorkouts >= TARGET_WORKOUTS,
-      donationsRequired: numWorkouts >= TARGET_WORKOUTS ? 0 : (TARGET_WORKOUTS - numWorkouts) * DONATION_EACH,
-      workouts: numWorkouts
-    };
-  } // Guess I could use some date-fns functions for this...
-
-
-  var challengeDurationInDays = dateToDays(dateEnd, dateStart);
-  var daysInChallenge = dateToDays(new Date(), dateStart);
-  var daysInChallengeRemaining = challengeDurationInDays - daysInChallenge;
-  var targetWorkouts = Math.ceil(TARGET_WORKOUTS / challengeDurationInDays * daysInChallenge);
-  return {
-    hasStarted: true,
-    hasFinished: false,
-    onSchedule: workouts.length >= targetWorkouts,
-    challengeDurationInDays: challengeDurationInDays,
-    daysInChallenge: daysInChallenge,
-    daysInChallengeRemaining: daysInChallengeRemaining,
-    workouts: numWorkouts
-  };
-};
 ;// CONCATENATED MODULE: ./containers/InfoContainer.tsx
 
 
@@ -41014,7 +41055,7 @@ var InfoContainer = function InfoContainer() {
       paragraph: true
     }, "".concat(data.workouts, " of ").concat(TARGET_WORKOUTS, " workouts recorded")), /*#__PURE__*/react.createElement(Typography_Typography, {
       paragraph: true
-    }, "".concat(formatNumber(data.donationsRequired.toString()), ",- NOK donation required")))));
+    }, "".concat(formatNumber(data.donationsRequired), ",- NOK donation required")))));
   }
 
   return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredBox, {
@@ -41036,6 +41077,8 @@ var InfoContainer = function InfoContainer() {
   }, "You are ", /*#__PURE__*/react.createElement("strong", null, "behind"), "!")), /*#__PURE__*/react.createElement(Typography_Typography, {
     paragraph: true
   }, "".concat(data.workouts, " of ").concat(TARGET_WORKOUTS, " workouts recorded")), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Number of workouts", ' ', "".concat(data.onSchedule ? 'ahead' : 'behind'), ': ', data.behindOrAhead), /*#__PURE__*/react.createElement(Typography_Typography, {
     paragraph: true
   }, "Days elapsed: ".concat(data.daysInChallenge)), /*#__PURE__*/react.createElement(Typography_Typography, {
     paragraph: true
@@ -41059,7 +41102,89 @@ var InfoContainer = function InfoContainer() {
     }));
   })));
 };
+;// CONCATENATED MODULE: ./containers/DonationsContainer.tsx
+
+
+
+
+
+
+
+
+
+var DonationsContainer = function DonationsContainer() {
+  var _useAppSelector = useAppSelector(function (state) {
+    return state.workouts;
+  }),
+      loading = _useAppSelector.loading,
+      error = _useAppSelector.error,
+      workouts = _useAppSelector.workouts;
+
+  if (loading) {
+    return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredLoading, null));
+  }
+
+  if (error) {
+    return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(Box_Box, null, /*#__PURE__*/react.createElement(Alert_Alert, {
+      severity: "warning"
+    }, "Failed to fetch entries.")));
+  }
+
+  var data = calculateChallengeData(workouts);
+
+  if (!data.hasStarted && !data.hasFinished) {
+    return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredBox, null, /*#__PURE__*/react.createElement(Typography_Typography, {
+      id: "modal-modal-title",
+      variant: "h6",
+      component: "h2"
+    }, "Challenge not yet started")));
+  }
+
+  if (data.hasStarted && data.hasFinished) {
+    return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredBox, null, /*#__PURE__*/react.createElement(Typography_Typography, {
+      id: "modal-modal-title",
+      variant: "h6",
+      component: "h2"
+    }, "Final donations: ".concat(formatNumber(data.donationsRequired), " NOK"))));
+  }
+
+  return /*#__PURE__*/react.createElement(ContainerWrapper, null, /*#__PURE__*/react.createElement(CenteredBox, {
+    minHeight: "calc(50vh - 3rem)"
+  }, data.onSchedule ? /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(Typography_Typography, {
+    variant: "h6",
+    component: "h2",
+    sx: {
+      color: '#388e3c',
+      mb: '2rem'
+    }
+  }, "You are on schedule, no donations (might) be required!"), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Good job!")) : /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(Typography_Typography, {
+    variant: "h6",
+    component: "h2",
+    sx: {
+      color: '#d32f2f',
+      mb: '2rem'
+    }
+  }, "You are ", /*#__PURE__*/react.createElement("strong", null, "behind"), ", donations (might) be required!"), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Current workouts: ".concat(data.workouts)), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Current target: ".concat(data.targetWorkouts)), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true,
+    sx: {
+      mb: 4
+    }
+  }, "Current behind: ".concat(data.behindOrAhead)), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Current donations at current pace: ".concat(formatNumber(data.behindOrAhead * DONATION_EACH), " NOK")), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Donations at better pace: ".concat(formatNumber(Math.round(data.behindOrAhead * 0.5) * DONATION_EACH), " NOK")), /*#__PURE__*/react.createElement(Typography_Typography, {
+    paragraph: true
+  }, "Donations at worse pace: ".concat(formatNumber(Math.round(data.behindOrAhead * 1.5) * DONATION_EACH), " NOK")))));
+};
 ;// CONCATENATED MODULE: ./containers/App.tsx
+
 
 
 
@@ -41087,6 +41212,9 @@ var App = function App() {
     switch (currentPage) {
       case Page.GRAPH:
         return /*#__PURE__*/react.createElement(GraphContainer, null);
+
+      case Page.DONATIONS:
+        return /*#__PURE__*/react.createElement(DonationsContainer, null);
 
       case Page.INFO:
       default:
@@ -60216,7 +60344,7 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(42177);
+/******/ 	var __webpack_exports__ = __webpack_require__(13737);
 /******/ 	
 /******/ })()
 ;
