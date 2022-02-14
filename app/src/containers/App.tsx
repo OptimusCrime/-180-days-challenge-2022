@@ -7,6 +7,7 @@ import {Page} from "../store/reducers/globalReducer";
 import {GraphContainer} from "./GraphContainer";
 import {InfoContainer} from "./InfoContainer";
 import {checkAuth, getEntries} from "../actions";
+import {DonationsContainer} from "./DonationsContainer";
 
 export const App = () => {
   const { showAuthModal, showEntryModal, page } = useAppSelector(state => state.global);
@@ -22,6 +23,10 @@ export const App = () => {
       case Page.GRAPH:
         return (
           <GraphContainer />
+        );
+      case Page.DONATIONS:
+        return (
+          <DonationsContainer />
         );
       case Page.INFO:
       default:

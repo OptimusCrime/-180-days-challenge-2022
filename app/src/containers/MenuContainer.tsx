@@ -78,6 +78,12 @@ export const MenuContainer = () => {
               </MenuItem>
               <MenuItem onClick={() => {
                 handleCloseNavMenu();
+                dispatch(setPage(Page.DONATIONS));
+              }}>
+                <Typography textAlign="center">Donations</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => {
+                handleCloseNavMenu();
                 getEntries(dispatch);
               }}>
                 <Typography textAlign="center">Refresh</Typography>
@@ -141,6 +147,16 @@ export const MenuContainer = () => {
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 Graph
+              </Button>
+
+              <Button
+                onClick={() => {
+                  handleCloseNavMenu();
+                  dispatch(setPage(Page.DONATIONS));
+                }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Donations
               </Button>
             </div>
             <Button

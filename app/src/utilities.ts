@@ -1,7 +1,7 @@
 import differenceInDays from "date-fns/differenceInDays";
 import {parse} from "date-fns";
 
-export const formatNumber = (x: string): string =>
+export const formatNumber = (x: number): string =>
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
 export const parseDate = (date: string): Date => parse(date, 'yyyy-MM-dd', new Date());

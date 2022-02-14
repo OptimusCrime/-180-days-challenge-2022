@@ -109,7 +109,7 @@ export const InfoContainer = () => {
                 {`${data.workouts} of ${TARGET_WORKOUTS} workouts recorded`}
               </Typography>
               <Typography paragraph={true}>
-                {`${formatNumber(data.donationsRequired.toString())},- NOK donation required`}
+                {`${formatNumber(data.donationsRequired)},- NOK donation required`}
               </Typography>
             </>
           )}
@@ -150,6 +150,13 @@ export const InfoContainer = () => {
           )}
         <Typography paragraph={true}>
           {`${data.workouts} of ${TARGET_WORKOUTS} workouts recorded`}
+        </Typography>
+        <Typography paragraph={true}>
+          Number of workouts
+          {' '}
+          {`${data.onSchedule ? 'ahead' : 'behind'}`}
+          {': '}
+          {data.behindOrAhead}
         </Typography>
         <Typography paragraph={true}>
           {`Days elapsed: ${data.daysInChallenge}`}

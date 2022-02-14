@@ -34,10 +34,12 @@ export interface ChallengeOngoing {
   hasStarted: true;
   hasFinished: false;
   onSchedule: boolean;
+  behindOrAhead: number;
   challengeDurationInDays: number;
   daysInChallenge: number;
   daysInChallengeRemaining: number;
   workouts: number;
+  targetWorkouts: number;
 }
 
 export type ChallengeData = ChallengeNotStarted | ChallengeFinished | ChallengeOngoing;
@@ -91,9 +93,11 @@ export const calculateChallengeData = (workouts: Entry[]): ChallengeData => {
     hasStarted: true,
     hasFinished: false,
     onSchedule: workouts.length >= targetWorkouts,
+    behindOrAhead: Math.abs(targetWorkouts - workouts.length),
     challengeDurationInDays,
     daysInChallenge,
     daysInChallengeRemaining,
-    workouts: numWorkouts
+    workouts: numWorkouts,
+    targetWorkouts,
   }
 }

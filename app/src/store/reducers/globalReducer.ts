@@ -2,7 +2,8 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export enum Page {
   INFO,
-  GRAPH
+  GRAPH,
+  DONATIONS
 }
 
 interface GlobalState {

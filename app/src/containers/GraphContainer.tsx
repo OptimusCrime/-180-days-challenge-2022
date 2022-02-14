@@ -11,6 +11,7 @@ import {ContainerWrapper} from "../components/ContainerWrapper";
 import {CHALLENGE_DATE_END, CHALLENGE_DATE_START, TARGET_WORKOUTS} from "../config";
 import {Entry} from "../types";
 import {calculateTotalDays, parseDate} from "../utilities";
+import {calculateChallengeData} from "../calculateProgression";
 
 // Some rehashed code from the original challenge. I have no idea what is going on here...
 const createXAxisValues = (params: {
@@ -138,6 +139,11 @@ export const GraphContainer = () => {
     xAxisValues,
   });
 
+  const data = calculateChallengeData(workouts);
+
+  // Jikes
+  const verticalPlotColor = (data.hasStarted && !data.hasFinished) ? (data.onSchedule ? '#5e5' : '#e55') : '#000';
+
   const config = {
     chart: {
       type: 'area',
@@ -187,7 +193,9 @@ export const GraphContainer = () => {
         // @ts-ignore
         return `<b>${format(this.x, 'MMM d')}</b><br />${output}${difference}`;
       },
-      shared: true
+      shared: true,
+      followCursor: true,
+      followTouchMove: true,
     },
     yAxis: {
       title: {
@@ -199,6 +207,17 @@ export const GraphContainer = () => {
       labels: {
         format: "{value:%b %e}"
       },
+      plotLines: [{
+        color: verticalPlotColor,
+        width: 2,
+        value: Date.now(),
+        zIndex: 9999,
+      }],
+      crosshair: {
+        enabled: true,
+        zIndex: 99999,
+        width: 2,
+      }
     },
     series: [{
       name: "Progress",
@@ -238,10 +257,12 @@ export const GraphContainer = () => {
 
   return (
     <ContainerWrapper>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={config}
-      />
+      <div style={{ userSelect: 'none'}}>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={config}
+        />
+      </div>
     </ContainerWrapper>
   );
 }
