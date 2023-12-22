@@ -1,12 +1,12 @@
 {
-  "name": "180-days-challenge-2022",
-  "short_name": "180-days-challenge-2022",
-  "description": "180 Days Challenge 2022",
+  "name": "180-days-challenge",
+  "short_name": "180-days-challenge",
+  "description": "180 Days Challenge",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
   "orientation": "any",
-  "start_url": "/180-days-challenge-2022",
+  "start_url": "/180-days-challenge",
   "background_color": "#fff",
   "theme_color": "#fff",
   "icons": [

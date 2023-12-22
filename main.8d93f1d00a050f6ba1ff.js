@@ -15925,7 +15925,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var domain =  false ? 0 : 'https://180-2022.optimuscrime.net';
+var domain =  false ? 0 : 'https://180-2024.optimuscrime.net';
 var BackendException = /*#__PURE__*/function (_Error) {
   _inherits(BackendException, _Error);
 
@@ -16233,7 +16233,7 @@ var MenuContainer = function MenuContainer() {
         md: 'flex'
       }
     }
-  }, "180 Days Challenge 2022"), /*#__PURE__*/react.createElement(Box_Box, {
+  }, "180 Days Challenge"), /*#__PURE__*/react.createElement(Box_Box, {
     sx: {
       flexGrow: 1,
       display: {
@@ -16321,7 +16321,7 @@ var MenuContainer = function MenuContainer() {
         md: 'none'
       }
     }
-  }, "180 Days Challenge 2022"), /*#__PURE__*/react.createElement(Box_Box, {
+  }, "180 Days Challenge"), /*#__PURE__*/react.createElement(Box_Box, {
     sx: {
       flexGrow: 1,
       display: {
