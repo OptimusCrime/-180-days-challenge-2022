@@ -1,5 +1,5 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Containers;
+namespace OptimusCrime\Challenge180Days\Containers;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -32,7 +32,7 @@ export const MenuContainer = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            180 Days Challenge 2022
+            180 Days Challenge
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -118,7 +118,7 @@ export const MenuContainer = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            180 Days Challenge 2022
+            180 Days Challenge
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <div

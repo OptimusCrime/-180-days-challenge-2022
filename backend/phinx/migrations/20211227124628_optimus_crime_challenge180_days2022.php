@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class OptimusCrimeChallenge180Days2022 extends AbstractMigration
+class OptimusCrimeChallenge180Days extends AbstractMigration
 {
     public function change()
     {

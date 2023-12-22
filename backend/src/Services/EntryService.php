@@ -1,9 +1,9 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Services;
+namespace OptimusCrime\Challenge180Days\Services;
 
 use Carbon\Carbon;
 
-use OptimusCrime\Challenge180Days2022\Models\Entry;
+use OptimusCrime\Challenge180Days\Models\Entry;
 
 class EntryService
 {

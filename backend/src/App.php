@@ -1,8 +1,8 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022;
+namespace OptimusCrime\Challenge180Days;
 
 use Exception;
-use OptimusCrime\Challenge180Days2022\Middlewares\Cors;
+use OptimusCrime\Challenge180Days\Middlewares\Cors;
 use Throwable;
 
 use Monolog\Logger as MonologLogger;
@@ -10,14 +10,14 @@ use Slim\App as Slim;
 use Slim\Exception\MethodNotAllowedException;
 use Slim\Exception\NotFoundException;
 
-use OptimusCrime\Challenge180Days2022\Containers\Database;
-use OptimusCrime\Challenge180Days2022\Containers\InternalServerError;
-use OptimusCrime\Challenge180Days2022\Containers\Logger;
-use OptimusCrime\Challenge180Days2022\Containers\PageNotFound;
-use OptimusCrime\Challenge180Days2022\Handlers\AuthHandler;
-use OptimusCrime\Challenge180Days2022\Handlers\EntryHandler;
-use OptimusCrime\Challenge180Days2022\Middlewares\Auth;
-use OptimusCrime\Challenge180Days2022\Middlewares\ReverseProxy;
+use OptimusCrime\Challenge180Days\Containers\Database;
+use OptimusCrime\Challenge180Days\Containers\InternalServerError;
+use OptimusCrime\Challenge180Days\Containers\Logger;
+use OptimusCrime\Challenge180Days\Containers\PageNotFound;
+use OptimusCrime\Challenge180Days\Handlers\AuthHandler;
+use OptimusCrime\Challenge180Days\Handlers\EntryHandler;
+use OptimusCrime\Challenge180Days\Middlewares\Auth;
+use OptimusCrime\Challenge180Days\Middlewares\ReverseProxy;
 
 class App
 {

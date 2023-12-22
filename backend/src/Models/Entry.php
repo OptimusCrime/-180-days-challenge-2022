@@ -1,5 +1,5 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Models;
+namespace OptimusCrime\Challenge180Days\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

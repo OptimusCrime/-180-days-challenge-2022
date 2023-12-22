@@ -1,11 +1,4 @@
-# 180 Days Challenge 2022
-
-Due to the monumental success of the original [180 Days Challenge](https://github.com/OptimusCrime/180-days-challenge) back in 2018, 
-I am returning for another challenge in 2022.
-
-Check the progress: [github.com/OptimusCrime/180-days-challenge-2022](https://optimuscrime.github.io/180-days-challenge-2022/)
-
-Deployment configuration: [github.com/OptimusCrime/180-days-challenge-2022-deployment](https://github.com/OptimusCrime/180-days-challenge-2022-deployment)
+# 180 Days Challenge
 
 ## The Premise
 

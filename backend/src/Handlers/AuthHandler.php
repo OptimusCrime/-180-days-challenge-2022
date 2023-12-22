@@ -1,12 +1,12 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Handlers;
+namespace OptimusCrime\Challenge180Days\Handlers;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;
 
-use OptimusCrime\Challenge180Days2022\Helpers\Configuration\Configuration;
+use OptimusCrime\Challenge180Days\Helpers\Configuration\Configuration;
 
 class AuthHandler extends BaseHandler
 {

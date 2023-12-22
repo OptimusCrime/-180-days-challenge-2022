@@ -1,5 +1,5 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Handlers;
+namespace OptimusCrime\Challenge180Days\Handlers;
 
 use Monolog\Logger as MonologLogger;
 use Psr\Container\ContainerExceptionInterface;

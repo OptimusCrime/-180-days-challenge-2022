@@ -1,13 +1,13 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Containers;
+namespace OptimusCrime\Challenge180Days\Containers;
 
 use Psr\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\ConnectionResolver;
 
-use OptimusCrime\Challenge180Days2022\Exceptions\MissingConfigurationException;
-use OptimusCrime\Challenge180Days2022\Helpers\Configuration\Configuration;
+use OptimusCrime\Challenge180Days\Exceptions\MissingConfigurationException;
+use OptimusCrime\Challenge180Days\Helpers\Configuration\Configuration;
 
 class Database
 {

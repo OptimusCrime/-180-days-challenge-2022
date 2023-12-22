@@ -1,4 +1,4 @@
-name: 180-days-challenge-2022-backend
+name: 180-days-challenge-backend
 on:
   push:
     branches:
@@ -33,7 +33,7 @@ jobs:
           ENV: prod
         with:
           registry: docker.pkg.github.com
-          name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-nginx
+          name: optimuscrime/180-days-challenge/180-days-challenge-nginx
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
           dockerfile: docker_nginx.Dockerfile
@@ -44,7 +44,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           registry: docker.pkg.github.com
-          name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-php
+          name: optimuscrime/180-days-challenge/180-days-challenge-php
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
           dockerfile: docker_php.Dockerfile
@@ -54,7 +54,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           registry: docker.pkg.github.com
-          name: optimuscrime/180-days-challenge-2022/180-days-challenge-2022-migrations
+          name: optimuscrime/180-days-challenge/180-days-challenge-migrations
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
           dockerfile: docker_migrations.Dockerfile

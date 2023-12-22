@@ -1,5 +1,5 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Exceptions;
+namespace OptimusCrime\Challenge180Days\Exceptions;
 
 use Exception;
 

@@ -6,11 +6,11 @@ services:
   #                  Webserver                  #
   ###############################################
 
-  challenge180days2022-php:
+  challenge180days-php:
     build:
       context: .
       dockerfile: docker_php.Dockerfile
-    container_name: "challenge180days2022_php_dev"
+    container_name: "challenge180days_php_dev"
     ports:
       - "9000"
     env_file:
@@ -25,33 +25,33 @@ services:
   #                    Nginx                    #
   ###############################################
 
-  challenge180days2022-nginx:
+  challenge180days-nginx:
     build:
       context: .
       dockerfile: docker_nginx.Dockerfile
       args:
         - ENV=dev
-    container_name: "challenge180days2022_nginx_dev"
+    container_name: "challenge180days_nginx_dev"
     ports:
       - "8098:80"
     volumes:
       - ./backend/_docker/site.conf:/etc/nginx/conf.d/site.conf
     depends_on:
-      - challenge180days2022-php
+      - challenge180days-php
     links:
-      - challenge180days2022-php
+      - challenge180days-php
 
   ###############################################
   #                 Migrations                  #
   ###############################################
 
-  challenge180days2022-migrations:
+  challenge180days-migrations:
     build:
       context: .
       dockerfile: docker_migrations.Dockerfile
-    container_name: "challenge180days2022_migrations_dev"
+    container_name: "challenge180days_migrations_dev"
     environment:
-      WAIT_HOSTS: challenge180days2022-db:3306
+      WAIT_HOSTS: challenge180days-db:3306
     env_file:
       - env_php_dev.env
     volumes:

@@ -1,14 +1,14 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Containers;
+namespace OptimusCrime\Challenge180Days\Containers;
 
 use Monolog\Formatter\NormalizerFormatter;
-use OptimusCrime\Challenge180Days2022\Exceptions\MissingConfigurationException;
+use OptimusCrime\Challenge180Days\Exceptions\MissingConfigurationException;
 use Psr\Container\ContainerInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger as MonologLogger;
 use Monolog\Handler\StreamHandler;
 
-use OptimusCrime\Challenge180Days2022\Helpers\Configuration\Configuration;
+use OptimusCrime\Challenge180Days\Helpers\Configuration\Configuration;
 
 class Logger
 {

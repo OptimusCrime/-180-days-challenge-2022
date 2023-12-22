@@ -1,11 +1,11 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Middlewares;
+namespace OptimusCrime\Challenge180Days\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-use OptimusCrime\Challenge180Days2022\Exceptions\MissingConfigurationException;
-use OptimusCrime\Challenge180Days2022\Helpers\Configuration\Configuration;
+use OptimusCrime\Challenge180Days\Exceptions\MissingConfigurationException;
+use OptimusCrime\Challenge180Days\Helpers\Configuration\Configuration;
 
 class ReverseProxy
 {

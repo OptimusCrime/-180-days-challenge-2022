@@ -1,5 +1,5 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Handlers;
+namespace OptimusCrime\Challenge180Days\Handlers;
 
 use Exception;
 
@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;
 
-use OptimusCrime\Challenge180Days2022\Services\EntryService;
+use OptimusCrime\Challenge180Days\Services\EntryService;
 
 class EntryHandler extends BaseHandler
 {

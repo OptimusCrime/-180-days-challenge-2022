@@ -72,9 +72,9 @@ module.exports = (env, argv) => {
       new FaviconsWebpackPlugin({
         logo: path.join(__dirname, 'src', 'icon', 'app-icon.png'),
         favicons: {
-          appName: "180-days-challenge-2022",
-          start_url: "/180-days-challenge-2022",
-          appDescription: "180 Days Challenge 2022",
+          appName: "180-days-challenge",
+          start_url: "/180-days-challenge",
+          appDescription: "180 Days Challenge",
         }
       }),
       new webpack.DefinePlugin({

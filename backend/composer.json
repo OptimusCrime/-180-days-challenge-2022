@@ -1,6 +1,6 @@
 {
-  "name": "optimuscrime/challenge2022",
-  "description": "Backend for 180 Days Challenge 2022",
+  "name": "optimuscrime/challenge",
+  "description": "Backend for 180 Days Challenge ",
   "license": "MIT",
   "require": {
     "php": ">=7.4",
@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "OptimusCrime\\Challenge180Days2022\\": "src"
+      "OptimusCrime\\Challenge180Days\\": "src"
     }
   },
   "scripts": {

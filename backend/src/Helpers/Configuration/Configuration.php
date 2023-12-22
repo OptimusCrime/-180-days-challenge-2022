@@ -1,7 +1,7 @@
 <?php
-namespace OptimusCrime\Challenge180Days2022\Helpers\Configuration;
+namespace OptimusCrime\Challenge180Days\Helpers\Configuration;
 
-use OptimusCrime\Challenge180Days2022\Exceptions\MissingConfigurationException;
+use OptimusCrime\Challenge180Days\Exceptions\MissingConfigurationException;
 
 class Configuration
 {

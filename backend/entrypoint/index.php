@@ -5,9 +5,9 @@ if (!(include __DIR__ . '/../vendor/autoload.php')) {
     die();
 }
 
-use OptimusCrime\Challenge180Days2022\App;
-use OptimusCrime\Challenge180Days2022\Helpers\SettingsParser;
-use OptimusCrime\Challenge180Days2022\Helpers\Configuration\Configuration;
+use OptimusCrime\Challenge180Days\App;
+use OptimusCrime\Challenge180Days\Helpers\SettingsParser;
+use OptimusCrime\Challenge180Days\Helpers\Configuration\Configuration;
 
 try {
     $app = new App(SettingsParser::getSlimConfig());
