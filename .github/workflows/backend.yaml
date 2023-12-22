@@ -32,7 +32,7 @@ jobs:
         env:
           ENV: prod
         with:
-          registry: docker.pkg.github.com
+          registry: https://ghcr.io
           name: optimuscrime/180-days-challenge/180-days-challenge-nginx
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
       - name: Build and publish php to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          registry: docker.pkg.github.com
+          registry: https://ghcr.io
           name: optimuscrime/180-days-challenge/180-days-challenge-php
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
@@ -53,7 +53,7 @@ jobs:
       - name: Build and publish migrations to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          registry: docker.pkg.github.com
+          registry: https://ghcr.io
           name: optimuscrime/180-days-challenge/180-days-challenge-migrations
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
