@@ -28,7 +28,7 @@ jobs:
           composer install
 
       - name: Build and publish nginx to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         env:
           ENV: prod
         with:
@@ -41,7 +41,7 @@ jobs:
           tags: "latest,${{ env.RELEASE_VERSION }}"
 
       - name: Build and publish php to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           registry: https://ghcr.io
           name: optimuscrime/180-days-challenge/180-days-challenge-php
@@ -51,7 +51,7 @@ jobs:
           tags: "latest,${{ env.RELEASE_VERSION }}"
 
       - name: Build and publish migrations to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           registry: https://ghcr.io
           name: optimuscrime/180-days-challenge/180-days-challenge-migrations
