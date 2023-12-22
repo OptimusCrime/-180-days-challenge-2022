@@ -36582,8 +36582,8 @@ var ContainerWrapper = function ContainerWrapper(_ref) {
 };
 ;// CONCATENATED MODULE: ./config.ts
 // Format YYYY-MM-DD
-var CHALLENGE_DATE_START = "2022-01-01";
-var CHALLENGE_DATE_END = "2022-06-30";
+var CHALLENGE_DATE_START = "2024-01-01";
+var CHALLENGE_DATE_END = "2024-06-30";
 var TARGET_WORKOUTS = 90;
 var DONATION_EACH = 500;
 ;// CONCATENATED MODULE: ./utilities.ts
