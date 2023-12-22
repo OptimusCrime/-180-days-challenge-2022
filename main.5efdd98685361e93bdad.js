@@ -15883,7 +15883,7 @@ var getToken = function getToken() {
   return null;
 };
 ;// CONCATENATED MODULE: ./constants.ts
-var TOKEN_HEADER_NAME =  false ? 0 : "CREwzlD4GJYXVJi";
+var TOKEN_HEADER_NAME =  false ? 0 : "";
 ;// CONCATENATED MODULE: ./api.ts
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
