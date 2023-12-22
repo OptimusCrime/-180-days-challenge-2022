@@ -3,7 +3,7 @@ import {TOKEN_HEADER_NAME} from "./constants";
 
 const domain = process.env.NODE_ENV === 'development'
   ? 'http://localhost:8098'
-  : 'https://180-2022.optimuscrime.net';
+  : 'https://180-2024.optimuscrime.net';
 
 export class BackendException extends Error {}
 
