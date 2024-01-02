@@ -6148,7 +6148,7 @@ function useId(idOverride) {
 
 /***/ }),
 
-/***/ 13737:
+/***/ 19248:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15882,8 +15882,6 @@ var getToken = function getToken() {
 
   return null;
 };
-;// CONCATENATED MODULE: ./constants.ts
-var TOKEN_HEADER_NAME =  false ? 0 : "";
 ;// CONCATENATED MODULE: ./api.ts
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -15922,7 +15920,6 @@ function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[nat
 function api_setPrototypeOf(o, p) { api_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return api_setPrototypeOf(o, p); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 
 
 var domain =  false ? 0 : 'https://180-2024.optimuscrime.net';
@@ -16001,7 +15998,9 @@ var withAuth = /*#__PURE__*/function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             return _context3.abrupt("return", api_objectSpread(api_objectSpread({}, init), {}, {
-              headers: api_objectSpread(api_objectSpread({}, init === null || init === void 0 ? void 0 : init.headers), {}, api_defineProperty({}, TOKEN_HEADER_NAME, getToken() || ''))
+              headers: api_objectSpread(api_objectSpread({}, init === null || init === void 0 ? void 0 : init.headers), {}, {
+                'authorization': "Bearer ".concat(getToken() || '')
+              })
             }));
 
           case 1:
@@ -60344,7 +60343,7 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(13737);
+/******/ 	var __webpack_exports__ = __webpack_require__(19248);
 /******/ 	
 /******/ })()
 ;
