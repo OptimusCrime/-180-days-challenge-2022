@@ -3,7 +3,6 @@ const path = require('path'),
   MiniCssExtractPlugin = require('mini-css-extract-plugin'),
   TerserWebpackPlugin = require('terser-webpack-plugin'),
   OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin"),
-  webpack = require('webpack'),
   FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 const buildPath = path.join(__dirname, 'docs');
@@ -75,11 +74,6 @@ module.exports = (env, argv) => {
           appName: "180-days-challenge",
           start_url: "/180-days-challenge",
           appDescription: "180 Days Challenge",
-        }
-      }),
-      new webpack.DefinePlugin({
-        'process.env': {
-          TOKEN_HEADER_NAME: JSON.stringify(process.env.TOKEN_HEADER_NAME || '')
         }
       }),
       new HtmlWebpackPlugin({

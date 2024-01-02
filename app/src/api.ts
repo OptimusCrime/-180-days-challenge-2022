@@ -1,5 +1,4 @@
 import {getToken} from "./utilities/localStorage";
-import {TOKEN_HEADER_NAME} from "./constants";
 
 const domain = process.env.NODE_ENV === 'development'
   ? 'http://localhost:8098'
@@ -23,7 +22,7 @@ export const withAuth = async (init?: RequestInit): Promise<RequestInit> => ({
     ...init,
     headers: {
       ...init?.headers,
-      [TOKEN_HEADER_NAME]: getToken() || ''
+      'authorization': `Bearer ${getToken() || ''}`
     }
 })
 

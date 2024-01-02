@@ -19,9 +19,9 @@ class Auth
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next): ResponseInterface
     {
         $configuration = Configuration::getInstance();
-        $headerValues = $request->getHeader($configuration->getAdminTokenHeaderName());
+        $headerValues = $request->getHeader('authorization');
 
-        if (count($headerValues) !== 1 || $headerValues[0] !== $configuration->getAdminTokenValue()) {
+        if (count($headerValues) !== 1 || $headerValues[0] !== ('Bearer ' . $configuration->getAdminTokenValue())) {
             return $response->withStatus(403);
         }
 

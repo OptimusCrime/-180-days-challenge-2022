@@ -18,8 +18,6 @@ jobs:
           node-version-file: .nvmrc  # Use the same version as configured for the project
 
       - name: Install and Build
-        env:
-          TOKEN_HEADER_NAME: '${{ secrets.TOKEN_HEADER_NAME }}'
         run: |
           cd app
           npm ci

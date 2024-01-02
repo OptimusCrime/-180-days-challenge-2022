@@ -12,7 +12,6 @@ class Configuration
 
     const DATABASE = 'database';
 
-    const ADMIN_TOKEN_HEADER_NAME = 'admin.token.header.name';
     const ADMIN_TOKEN_VALUE = 'admin.token.value';
     const ADMIN_PASSWORD = 'admin.password';
 
@@ -56,14 +55,6 @@ class Configuration
     public function getDatabase(): string
     {
         return $this->lookup(static::DATABASE);
-    }
-
-    /**
-     * @throws MissingConfigurationException
-     */
-    public function getAdminTokenHeaderName(): string
-    {
-        return $this->lookup(static::ADMIN_TOKEN_HEADER_NAME);
     }
 
     /**
