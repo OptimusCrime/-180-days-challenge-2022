@@ -16,7 +16,7 @@ class AuthHandler extends BaseHandler
             $configuration = Configuration::getInstance();
             $headerValues = $request->getHeader('authorization');
 
-            if (count($headerValues) !== 1 || $headerValues[0] !== ('Bearer' . $configuration->getAdminTokenValue())) {
+            if (count($headerValues) !== 1 || $headerValues[0] !== ('Bearer ' . $configuration->getAdminTokenValue())) {
                 return $response->withStatus(401);
             }
 
