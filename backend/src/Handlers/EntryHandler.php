@@ -50,7 +50,57 @@ class EntryHandler extends BaseHandler
                 return $response->withStatus(200);
             }
 
+            return $response->withStatus(400);
+        }
+        catch (Exception $ex) {
+            $this->logger->error('Failed to create a new entry', [
+                'exception' => $ex
+            ]);
+
             return $response->withStatus(500);
+        }
+    }
+
+    public function put(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        try {
+            if (!isset($args['id']) || !is_numeric($args['id'])) {
+                return $response->withStatus(400);
+            }
+
+            $payload = json_decode($request->getBody()->getContents(), true);
+
+            $status = EntryService::update($args['id'], $payload['comment'] ?? null);
+
+            if ($status) {
+                return $response->withStatus(200);
+            }
+
+            return $response->withStatus(400);
+        }
+        catch (Exception $ex) {
+            $this->logger->error('Failed to create a new entry', [
+                'exception' => $ex
+            ]);
+
+            return $response->withStatus(500);
+        }
+    }
+
+    public function delete(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        try {
+            if (!isset($args['id']) || !is_numeric($args['id'])) {
+                return $response->withStatus(400);
+            }
+
+            $status = EntryService::delete($args['id']);
+
+            if ($status) {
+                return $response->withStatus(200);
+            }
+
+            return $response->withStatus(400);
         }
         catch (Exception $ex) {
             $this->logger->error('Failed to create a new entry', [

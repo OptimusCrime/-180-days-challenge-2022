@@ -8,9 +8,10 @@ import {GraphContainer} from "./GraphContainer";
 import {InfoContainer} from "./InfoContainer";
 import {checkAuth, getEntries} from "../actions";
 import {DonationsContainer} from "./DonationsContainer";
+import {DeleteEntryModalContainer} from "./DeleteEntryModalContainer";
 
 export const App = () => {
-  const { showAuthModal, showEntryModal, page } = useAppSelector(state => state.global);
+  const { showAuthModal, showEntryModal, showDeleteModal, page } = useAppSelector(state => state.global);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -44,6 +45,9 @@ export const App = () => {
       )}
       {showEntryModal && (
         <EntryModalContainer />
+      )}
+      {showDeleteModal && (
+        <DeleteEntryModalContainer />
       )}
       {renderMainContent(page)}
     </div>

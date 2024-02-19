@@ -34,6 +34,39 @@ class EntryService
         return $entry->save();
     }
 
+    public static function update(int $id, ?string $comment): bool
+    {
+        $entry = Entry
+            ::where('id', $id)
+            ->first();
+
+        if (!$entry) {
+            return false;
+        }
+
+        if (strlen($comment) > 0) {
+            $entry->comment = $comment;
+        }
+        else {
+            $entry->comment = null;
+        }
+
+        return $entry->save();
+    }
+
+    public static function delete(int $id): bool
+    {
+        $entry = Entry
+            ::where('id', $id)
+            ->first();
+
+        if (!$entry) {
+            return false;
+        }
+
+        return $entry->delete(true);
+    }
+
     private static function map(Entry $entry): array {
         return [
             'id' => $entry->id,

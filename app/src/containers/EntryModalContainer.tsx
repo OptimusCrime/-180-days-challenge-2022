@@ -27,6 +27,7 @@ export const EntryModalContainer = () => {
   const [comment, setComment] = useState<string>("");
   const [date, setDate] = useState<Date>(new Date());
   const [error, setError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const addEntry = async (currentComment: string, currentDate: Date, callback: () => void) => {
     try {
@@ -47,9 +48,11 @@ export const EntryModalContainer = () => {
       }
       else {
         setError(true);
+        setIsLoading(false);
       }
     } catch (ex) {
       setError(true);
+      setIsLoading(false);
     }
   }
 
@@ -108,20 +111,26 @@ export const EntryModalContainer = () => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => dispatch(toggleShowEntryModal())}
-        >
-          Close
-        </Button>
+        {!isLoading && (
+          <Button
+            onClick={() => dispatch(toggleShowEntryModal())}
+          >
+            Close
+          </Button>
+        )}
         <Button
           onClick={() => {
+            setIsLoading(true);
+
             addEntry(comment, date, () => {
               getEntries(dispatch);
               dispatch(toggleShowEntryModal())
+              setIsLoading(false);
             });
           }}
+          disabled={isLoading}
         >
-          Add
+          {isLoading ? 'Please wait' : 'Add'}
         </Button>
       </DialogActions>
     </ActuallyUsefulModal>

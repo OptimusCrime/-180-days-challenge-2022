@@ -1,19 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactTimeAgo from "react-time-ago";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en.json";
-import {Alert, Box, Divider, Typography} from "@mui/material";
+import {Alert, Box, Button, Divider, TextField, Typography} from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import {format} from "date-fns";
 
-import {useAppSelector} from "../store/hooks";
+import {useAppDispatch, useAppSelector} from "../store/hooks";
 import {calculateChallengeData} from "../calculateProgression";
 import {CenteredLoading} from "../components/CenteredLoading";
 import {CenteredBox} from "../components/CenteredBox";
 import {TARGET_WORKOUTS} from "../config";
 import {formatNumber} from "../utilities";
 import {ContainerWrapper} from "../components/ContainerWrapper";
-
-TimeAgo.addDefaultLocale(en);
+import {getEntries} from "../actions";
+import {toggleShowDeleteModal, toggleShowEntryModal} from "../store/reducers/globalReducer";
+import {httpOk, withAuth} from "../api";
+import {workoutsFetchStart} from "../store/reducers/workoutsReducer";
 
 // This is pretty stupid, but here goes. Using `now={}` or `timeOffset={}` combined with a future Date in ReactTimeAgo
 // causes an endless loop that completely crashes the application. To work around this problem, I match up the hours
@@ -26,13 +29,63 @@ const getDateAtMidnight = (date: Date) => {
   return midnightDate.getTime();
 }
 
+interface EditState {
+  id: number | null;
+  comment: string;
+  updateStarted: boolean;
+  updateError: boolean;
+}
+
+const initialState: EditState = {
+  id: null,
+  comment: "",
+  updateStarted: false,
+  updateError: false,
+}
+
 export const InfoContainer = () => {
-  const { loading, error, workouts } = useAppSelector(state => state.workouts);
+  const dispatch = useAppDispatch();
+  const {loading, error, workouts} = useAppSelector(state => state.workouts);
+
+  const [editState, setEditState] = useState<EditState>(initialState);
+
+  const editEntry = async (id: number, currentComment: string, callback: () => void) => {
+    try {
+      const response =
+        await httpOk(
+          `/entry/${id}`,
+          await withAuth({
+            method: "PUT",
+            body: JSON.stringify({
+              comment: currentComment.length > 0 ? currentComment : null,
+            }),
+          })
+        );
+
+      if (response) {
+        callback();
+      }
+      else {
+        setEditState(prevState => ({
+          ...prevState,
+          updateStarted: false,
+          updateError: true,
+        }))
+      }
+    } catch (ex) {
+      setEditState(prevState => ({
+        ...prevState,
+        updateStarted: false,
+        updateError: true,
+      }));
+    }
+  }
+
 
   if (loading) {
     return (
       <ContainerWrapper>
-        <CenteredLoading />
+        <CenteredLoading/>
       </ContainerWrapper>
     )
   }
@@ -147,7 +200,7 @@ export const InfoContainer = () => {
               You are <strong>behind</strong>!
             </Typography>
           </>
-          )}
+        )}
         <Typography paragraph={true}>
           {`${data.workouts} of ${TARGET_WORKOUTS} workouts recorded`}
         </Typography>
@@ -168,28 +221,107 @@ export const InfoContainer = () => {
       <Divider sx={{mb: '1rem'}}/>
       <Box>
         {workouts.map(workout => (
+          <>
           <Box
             key={workout.id}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
           >
-            <Typography paragraph={true}>
-              <>
-                {format(workout.added, 'eee, MMMM d HH:mm, yyyy')}
-                {" ("}
-                <ReactTimeAgo date={workout.added}/>
-                {")"}
-              </>
-            </Typography>
-            {workout.comment && (
+            <Box>
               <Typography paragraph={true}>
                 <>
-                  <strong>Comment</strong>
-                  {": "}
-                  {workout.comment}
+                  {format(workout.added, 'eee, MMMM d @ HH:mm')}
                 </>
               </Typography>
-            )}
-            <Divider sx={{mb: '1rem'}}/>
+              {editState.id === workout.id ? (
+                  <Box sx={{ pb: 2 }}>
+                  <TextField
+                    autoFocus
+                    label="Comment"
+                    margin="dense"
+                    variant="standard"
+                    type="text"
+                    defaultValue={editState.comment}
+                    fullWidth
+                    onChange={e => setEditState(prevState => ({...prevState, comment: e.target.value}))}
+                  />
+
+                  <Button
+                    sx={{ mt: 1 }}
+                    onClick={() => {
+                      setEditState(prevState => ({
+                        ...prevState,
+                        updateStarted: true,
+                      }));
+
+                      editEntry(editState.id as number, editState.comment, () => {
+                        getEntries(dispatch);
+                        setEditState({
+                          id: null,
+                          comment: "",
+                          updateStarted: false,
+                          updateError: false,
+                        });
+                      });
+                    }}
+                    disabled={editState.updateStarted}
+                  >
+                    {editState.updateStarted ? 'Please wait' : 'Update'}
+                  </Button>
+
+                    {editState.updateError && (
+                      <Alert
+                        severity="warning"
+                        sx={{
+                          mt: '1rem'
+                        }}
+                      >
+                        Failed to update entry
+                      </Alert>
+                    )}
+                  </Box>
+                ) : (
+                <Typography paragraph={true}>
+                  <>
+                    <strong>Comment</strong>
+                    {": "}
+                    {workout.comment ? workout.comment : <i>No comment</i>}
+                  </>
+                </Typography>
+              )}
+            </Box>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-around',
+            }}>
+              <Button
+                sx={{m: 0, p: 0, display: 'block'}}
+                onClick={() => setEditState({
+                  id: workout.id,
+                  comment: workout.comment ?? "",
+                  updateStarted: false,
+                  updateError: false,
+                })}
+              >
+                <EditIcon/>
+              </Button>
+
+              <Button
+                sx={{m: 0, p: 0, display: 'block'}}
+                onClick={() => {
+                  dispatch(toggleShowDeleteModal(workout.id))
+                }}
+              >
+                <DeleteIcon/>
+              </Button>
+            </Box>
           </Box>
+          <Divider sx={{mb: '1rem'}}/>
+          </>
         ))}
       </Box>
     </ContainerWrapper>

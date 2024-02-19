@@ -62,6 +62,8 @@ class App
         $app->options('/entries', function ($request, $response) {
             return $response;
         });
+        $app->put('/entry/{id:[0-9]+}', EntryHandler::class . ':put')->add(new Auth());
+        $app->delete('/entry/{id:[0-9]+}', EntryHandler::class . ':delete')->add(new Auth());
 
         $app->get('/auth', AuthHandler::class . ':get');
         $app->post('/auth', AuthHandler::class . ':post');

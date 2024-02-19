@@ -9,6 +9,8 @@ export enum Page {
 interface GlobalState {
   showAuthModal: boolean;
   showEntryModal: boolean;
+  showDeleteModal: boolean;
+  deleteId: number | null;
   isAuthenticated: boolean;
   authenticationStarted: boolean;
   authenticationFailed: boolean;
@@ -19,6 +21,8 @@ interface GlobalState {
 const initialState: GlobalState = {
   showAuthModal: false,
   showEntryModal: false,
+  showDeleteModal: false,
+  deleteId: null,
   isAuthenticated: false,
   authenticationStarted: false,
   authenticationFailed: false,
@@ -35,6 +39,10 @@ const globalReducer = createSlice({
     },
     toggleShowEntryModal(state) {
       state.showEntryModal = !state.showEntryModal;
+    },
+    toggleShowDeleteModal(state, action: PayloadAction<number | null>) {
+      state.showDeleteModal = !state.showDeleteModal;
+      state.deleteId = action.payload;
     },
     authenticationStarted(state) {
       state.authenticationStarted = true;
@@ -63,6 +71,7 @@ const globalReducer = createSlice({
 export const {
   toggleShowEntryModal,
   toggleShowAuthModal,
+  toggleShowDeleteModal,
   authenticationStarted,
   authenticationFinished,
   authenticationFailed,
